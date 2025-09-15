@@ -1,0 +1,222 @@
+# AtoM Reference Code Separator Plugin Design
+
+## Overview
+This plugin will modify how reference codes are displayed in AtoM by providing an option to enforce consistent separator usage between all parts of the reference code, including the country code. This will be done by intercepting the reference code generation process without modifying the core functions.
+
+## Implementation Details
+
+### 1. Create Plugin Structure
+```
+plugins/
+  arReferenceCodeSeparatorPlugin/
+    config/
+      arReferenceCodeSeparatorPluginConfiguration.class.php
+    lib/
+      model/
+        arReferenceCodeSeparatorPlugin.class.php
+    modules/
+      settings/
+        actions/
+          indexAction.class.php
+        templates/
+          _separator.php
+```
+
+### 2. Plugin Configuration Class
+```php
+// arReferenceCodeSeparatorPluginConfiguration.class.php
+
+class arReferenceCodeSeparatorPluginConfiguration extends sfPluginConfiguration
+{
+  public static $summary = 'Enforces consistent separator usage in reference codes';
+  public static $version = '1.0.0';
+
+  public function initialize()
+  {
+    // Register event listeners
+    $this->dispatcher->connect(
+      'reference_code.get_code',
+      array('arReferenceCodeSeparatorPlugin', 'formatReferenceCode')
+    );
+    
+    // Agregar evento para el árbol
+    $this->dispatcher->connect(
+        'treeview.get_label',
+        array('arReferenceCodeSeparatorPlugin', 'formatTreeLabel')
+    );
+  }
+}
+```
+
+### 3. Plugin Main Class
+```php
+// arReferenceCodeSeparatorPlugin.class.php
+
+class arReferenceCodeSeparatorPlugin
+{
+  public static function formatReferenceCode($event)
+  {
+    // Get configured separator
+    $separator = sfConfig::get('app_separator_character', '-');
+
+    $code = $event['code'];
+    $context = isset($event['context']) ? $event['context'] : 'default';
+    
+    // Split code into parts using any common separator
+    $parts = preg_split('/[\s\-_]+/', $code);
+    
+    // Rejoin using configured separator
+    $formattedCode = implode($separator, $parts);
+    
+    // Si estamos indexando, asegurarnos de que se indexe el código completo
+    if ($context === 'elasticsearch') {
+        $event->setReturnValue($formattedCode);
+        return $formattedCode;
+    }
+    
+    // Para otros contextos, retornar según el tipo de visualización
+    $event->setReturnValue($formattedCode);
+    return $formattedCode;
+  }
+  
+  public static function formatTreeLabel($event)
+  {
+    $resource = $event['resource'];
+    
+    // Si no tiene identificador, retornar solo el título
+    if (!isset($resource->identifier)) {
+        return $resource->title;
+    }
+    
+    // Obtener los identificadores y el título para el árbol
+    $title = $resource->title;
+    $dates = isset($resource->dates[0]) ? ', ' . $resource->dates[0] : '';
+    
+    // Si no es una vista de árbol o es una indexación, retornar el título completo
+    if (isset($event['context']) && $event['context'] === 'elasticsearch') {
+        return $title . $dates;
+    }
+    
+    // Para el árbol, mostrar el identificador y título
+    return $resource->identifier . ' - ' . $title . $dates;
+  }
+}
+```
+
+### 4. Integration Points
+
+1. Add event dispatching in QubitInformationObject::getInheritedReferenceCode():
+```php
+// Before returning the final identifier:
+$event = new sfEvent($this, 'reference_code.get_code', array('code' => $identifier));
+$this->dispatcher->filter($event, $identifier);
+$identifier = $event->getReturnValue();
+```
+
+2. Add event dispatching in arElasticSearchInformationObjectPdo::getReferenceCode():
+```php
+// Before returning the final refcode:
+$event = new sfEvent($this, 'reference_code.get_code', array('code' => $refcode));
+$this->dispatcher->filter($event, $refcode);
+$refcode = $event->getReturnValue();
+```
+
+3. Modifica el archivo templates/_treeView.php:
+```php
+// Antes de mostrar el nodo del árbol
+$event = new sfEvent($resource, 'treeview.get_label', array('resource' => $resource));
+$this->dispatcher->filter($event, $resource->title);
+$label = $event->getReturnValue();
+```
+
+## Installation
+
+1. Copy the plugin folder to the AtoM plugins directory
+2. Enable the plugin in config/ProjectConfiguration.class.php:
+```php
+$this->enablePlugins(array(
+  // ... other plugins
+  'arReferenceCodeSeparatorPlugin'
+));
+```
+
+## Usage
+
+The plugin will automatically:
+1. Hook into the reference code generation process
+2. Detect any spaces or other separators between reference code parts
+3. Replace them with the configured separator character
+
+Example transformations:
+- "UY UDELAR-AGU AHI-I" -> "UY-UDELAR-AGU-AHI-I"
+- "CA_BC 100_200" -> "CA-BC-100-200"
+
+## Notes
+
+1. The plugin uses AtoM's event system to modify reference codes without changing core functions
+2. It respects the configured separator character from AtoM settings
+3. Can be enabled/disabled by administrators
+4. Works with both the main reference code function and the Elasticsearch indexing function
+5. No core code modifications required
+6. Maintains backwards compatibility
+
+## Nota sobre la búsqueda
+
+El plugin está diseñado para mantener dos representaciones del código de referencia:
+1. En el índice de Elasticsearch: Se guarda el código de referencia completo para permitir búsquedas por cualquier parte del código
+2. En la interfaz de usuario: Se muestra el código según el contexto (árbol, vista detallada, etc.)
+
+Esto asegura que:
+- Los usuarios pueden buscar usando cualquier parte del código de referencia
+- El árbol muestra una vista simplificada y legible
+- Las vistas detalladas muestran el código completo
+
+## Required Commands After Plugin Changes
+
+After enabling or disabling the plugin, you need to run the following commands to ensure all reference codes are displayed correctly throughout the application:
+
+1. Clear the application cache to apply the new plugin configuration:
+```bash
+php symfony cc
+```
+
+2. Reiniciar el índice de Elasticsearch:
+```bash
+# Detener Elasticsearch
+sudo systemctl stop elasticsearch
+
+# Esperar unos segundos para asegurarnos de que se detuvo completamente
+sleep 5
+
+# Iniciar Elasticsearch
+sudo systemctl start elasticsearch
+
+# Esperar a que Elasticsearch se inicie completamente
+sleep 10
+
+# Poblar el índice (esto recreará el índice automáticamente)
+php symfony search:populate
+```
+
+3. Limpiar la caché:
+```bash
+# Limpiar la caché de la aplicación
+php symfony cc
+
+# Reiniciar PHP-FPM
+sudo systemctl restart php8.3-fpm
+```
+
+No es necesario reiniciar Elasticsearch ya que este cambio solo afecta a la visualización del árbol, no al índice de búsqueda.
+
+Note: These commands may take some time to complete depending on the size of your database. It's recommended to run them during maintenance windows or low-traffic periods.
+
+## Future Enhancements
+
+1. Add plugin settings page to configure:
+   - Custom separator characters
+   - Whitelist/blacklist separators to replace
+   - Pattern matching rules
+2. Cache formatted codes to improve performance
+3. Add option to reindex existing records with new separator format
+4. Add automated reindexing after plugin activation/deactivation

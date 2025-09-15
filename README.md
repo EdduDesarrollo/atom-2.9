@@ -1,59 +1,59 @@
 # [Access to Memory](https://www.accesstomemory.org)
 
-Developed and maintained by [Artefactual Systems](https://www.artefactual.com/)
+Desarrollado y mantenido por [Artefactual Systems](https://www.artefactual.com/)
 
-AtoM (short for Access to Memory) is a web-based, open source application for
-standards-based archival description and access. The application is
-multilingual and multi-repository. First commissioned by the International
-Council on Archives ([ICA](https://www.ica.org)) to make it easier for
-archival institutions worldwide to put their holdings online using the ICA’s
-descriptive standards, the project has since grown into an internationally
-used community-driven project. Learn more at:
+AtoM (abreviatura de Access to Memory) es una aplicación web de código abierto para
+la descripción archivística y el acceso basado en estándares. La aplicación es
+multilingüe y multi-repositorio. Inicialmente encargada por el Consejo
+Internacional de Archivos ([ICA](https://www.ica.org)) para facilitar a las
+instituciones archivísticas de todo el mundo la publicación en línea de sus
+fondos utilizando los estándares descriptivos del ICA, el proyecto se ha
+convertido en un proyecto internacional impulsado por la comunidad. Más información en:
 
 * https://www.accesstomemory.org
 
-You are free to copy, modify, and distribute AtoM with attribution under the
-terms of the AGPLv3 license. See the [LICENSE](LICENSE) file for details.
+Puede copiar, modificar y distribuir AtoM con atribución bajo los
+términos de la licencia AGPLv3. Consulte el archivo [LICENSE](LICENSE) para más detalles.
 
-## Installation
+## Instalación
 
-**Production installation**
+**Instalación en producción**
 
-AtoM is intended to be installed using a Linux-based operating system. We use
-Ubuntu LTS releases in development and testing, but users have successfully
-installed on other distributions as well.
+AtoM está diseñado para ser instalado en un sistema operativo basado en Linux. Usamos
+las versiones LTS de Ubuntu en desarrollo y pruebas, pero los usuarios también han
+instalado exitosamente en otras distribuciones.
 
-* [Linux installation guides](https://www.accesstomemory.org/docs/latest/admin-manual/installation/ubuntu/)
+* [Guías de instalación en Linux](https://www.accesstomemory.org/docs/latest/admin-manual/installation/ubuntu/)
 
-For other O/S installs, we recommend virtualization.
+Para instalaciones en otros sistemas operativos, recomendamos la virtualización.
 
-**Development environments**
+**Entornos de desarrollo**
 
-If you want to install a local copy of AtoM for testing and/or development, we
-maintain two development environments:
+Si desea instalar una copia local de AtoM para pruebas y/o desarrollo,
+mantenemos dos entornos de desarrollo:
 
 * [Docker](https://www.accesstomemory.org/docs/latest/dev-manual/env/compose/)
 * [Vagrant](https://www.accesstomemory.org/docs/latest/dev-manual/env/vagrant/)
 
-## Other resources
+## Otros recursos
 
-* [Website](https://www.accesstomemory.org) - the home of the AtoM project!
-* [Documentation](https://www.accesstomemory.org/docs/latest/) - where you'll
-  find our User, Administrator, and Developer manuals. We version our manuals
-  for each major release.
-* [Wiki](https://wiki.accesstomemory.org/) - community and project resources,
-  development documentation, release notes, and more.
-* [User Forum](https://groups.google.com/forum/#!forum/ica-atom-users) - Forum
-  and mailling list for user questions (both technical and end-user),
-  discussion, and more.
-* [SlideShare](https://www.slideshare.net/accesstomemory) - where we upload
-  all the slide decks from our conference presentations and training camps!
-* [Paid support](https://www.artefactual.com/services/): Paid support,
-  hosting, training, theming, data migrations, consulting, and software
-  development contracts from Artefactual.
+* [Sitio web](https://www.accesstomemory.org) - ¡la casa del proyecto AtoM!
+* [Documentación](https://www.accesstomemory.org/docs/latest/) - donde encontrará
+  nuestros manuales de Usuario, Administrador y Desarrollador. Versionamos nuestros
+  manuales para cada versión principal.
+* [Wiki](https://wiki.accesstomemory.org/) - recursos de la comunidad y del proyecto,
+  documentación de desarrollo, notas de lanzamiento y más.
+* [Foro de usuarios](https://groups.google.com/forum/#!forum/ica-atom-users) - Foro
+  y lista de correo para preguntas de usuarios (tanto técnicas como de usuario final),
+  discusiones y más.
+* [SlideShare](https://www.slideshare.net/accesstomemory) - ¡donde subimos
+  todas las presentaciones de nuestras conferencias y campos de entrenamiento!
+* [Soporte pagado](https://www.artefactual.com/services/): Soporte pagado,
+  alojamiento, capacitación, temas, migraciones de datos, consultoría y contratos
+  de desarrollo de software de Artefactual.
 
-## Contributing
+## Contribuir
 
-Thank you for your interest in contributing to the AtoM project! 
+¡Gracias por su interés en contribuir al proyecto AtoM!
 
-Please see our [contributing guidelines](CONTRIBUTING.md) file for more information. 
+Por favor, consulte nuestro archivo de [guías de contribución](CONTRIBUTING.md) para más información.

@@ -233,6 +233,8 @@ class arElasticSearchInformationObjectPdo
         $refcode = '';
         $this->repository = $this->getRepository();
 
+        $separator = sfConfig::get('app_separator_character', '-');
+
         if (isset($this->repository) && $includeRepoAndCountry) {
             if (null != $cc = $this->repository->getCountryCode(['culture' => $this->__get('culture')])) {
                 $refcode .= $cc.' ';
@@ -255,7 +257,7 @@ class arElasticSearchInformationObjectPdo
             $identifiers[] = $this->identifier;
         }
 
-        $refcode .= implode(sfConfig::get('app_separator_character', '-'), $identifiers);
+        $refcode .= implode($separator, $identifiers);
 
         return $refcode;
     }

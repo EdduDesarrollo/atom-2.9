@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Limpiar cache Symfony",
+      "type": "shell",
+      "command": "sudo php symfony cc",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "Reiniciar PHP-FPM",
+      "type": "shell",
+      "command": "sudo systemctl restart php8.3-fpm",
+      "problemMatcher": []
+    },
+    {
+      "label": "Construir proyecto con NPM",
+      "type": "shell",
+      "command": "sudo npm run build",
+      "problemMatcher": []
+    }
+  ]
+}

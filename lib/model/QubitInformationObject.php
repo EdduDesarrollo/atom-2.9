@@ -2585,7 +2585,8 @@ class QubitInformationObject extends BaseInformationObject
             $item = $item->parent;
         }
 
-        $identifier = implode(sfConfig::get('app_separator_character', '-'), $identifier);
+        $separator = sfConfig::get('app_separator_character', '-');
+        $identifier = implode($separator, $identifier);
 
         if ($includeRepoAndCountry) {
             if (isset($repository->identifier)) {

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
 <xliff version="1.0">
-  <file source-language="en" target-language="" datatype="plaintext" original="messages" date="2025-03-10T19:18:50Z" product-name="messages">
+  <file source-language="en" target-language="" datatype="plaintext" original="messages" date="2025-04-24T10:28:00Z" product-name="messages">
     <header/>
     <body>
       <trans-unit id="f191b2120c9efa7b0c1411d6989e325561707ddb">
@@ -1011,7 +1011,7 @@
       </trans-unit>
       <trans-unit id="5b36c5a31df7ccd65152324a38d3008b45f55476">
         <source xml:space="preserve">Card view</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Vista icono</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/default/templates/_viewPicker.php</note>
       </trans-unit>
       <trans-unit id="8c684290ce0b8a8e6cee79a145e17554064a4760">
@@ -1492,7 +1492,7 @@
       </trans-unit>
       <trans-unit id="705178b09a869a5185cc986a0c2bc0f518c7a3ed">
         <source xml:space="preserve">Delete criterion</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Eliminar creaci&#xF3;n</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/actor/templates/_advancedSearch.php</note>
       </trans-unit>
       <trans-unit id="9e746acf132981a7051a422fa559c043058de15c">
@@ -3957,22 +3957,22 @@
       </trans-unit>
       <trans-unit id="967f58aa5fa1e2e9c37d6a264176556f49d0f56a">
         <source xml:space="preserve">Privacy Notification</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Notificaci&#xF3;n de Privacidad</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/settings/actions/menuComponent.class.php</note>
       </trans-unit>
       <trans-unit id="3c5af5352e8b122e77cc2d7d09e5a77d613be138">
         <source xml:space="preserve">Privacy Notification Message</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Mensaje de Notificaci&#xF3;n de Privacidad</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/settings/templates/privacyNotificationSuccess.php</note>
       </trans-unit>
       <trans-unit id="1c342232bc8618e1802d231aa3d3f46a7beac4c1">
         <source xml:space="preserve">Privacy Notification Settings</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Configuraci&#xF3;n de Notificaci&#xF3;n de Privacidad</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/settings/templates/privacyNotificationSuccess.php</note>
       </trans-unit>
       <trans-unit id="6097c6cc468677650d41c74ed4c6e477f517934d">
         <source xml:space="preserve">Privacy notification settings saved.</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Configuraci&#xF3;n de Notificaci&#xF3;n de Privacidad guardada.</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/settings/actions/privacyNotificationAction.class.php</note>
       </trans-unit>
       <trans-unit id="ff4fc0276e960c348647b647235f68200887c9d2">
@@ -4932,7 +4932,7 @@
       </trans-unit>
       <trans-unit id="4d5d982e55611df11fe41d22d93da1062e2879ab">
         <source xml:space="preserve">Storage service</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Servicio de almacenamiento</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/settings/actions/menuComponent.class.php</note>
       </trans-unit>
       <trans-unit id="497a500af2eec4aaa0a712523fcf62eb5c987d0b">
@@ -4987,7 +4987,7 @@
       </trans-unit>
       <trans-unit id="135aeb7c19a4f3feda4fb9f88ab915827fff7c55">
         <source xml:space="preserve">Table view</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Vista tabla</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/default/templates/_viewPicker.php</note>
       </trans-unit>
       <trans-unit id="090ec5f560fc50377fcd95e5cda128e91b276e98">
@@ -5067,7 +5067,7 @@
       </trans-unit>
       <trans-unit id="cb7599eaa2b4cd2e64fcea61e35c6f727004f467">
         <source xml:space="preserve">The clipboard is empty for this entity type.</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">El portapapeles est&#xE1; vac&#xED;o para este tipo de entidad.</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/clipboard/actions/exportAction.class.php</note>
       </trans-unit>
       <trans-unit id="4ecde563fe4e262de9e15f563e4f4e52fc5ff982">
@@ -5202,7 +5202,7 @@
       </trans-unit>
       <trans-unit id="8d28e517f2e8a3afedf075f046aca7ae05a6ccf1">
         <source xml:space="preserve">There was an error loading the clipboard content.</source>
-        <target xml:space="preserve"/>
+        <target xml:space="preserve">Se produjo un error al cargar el contenido del portapapeles.</target>
         <note>https://github.com/artefactual/atom/blob/master/apps/qubit/modules/menu/templates/_clipboardMenu.php</note>
       </trans-unit>
       <trans-unit id="d6d182b0576513aab380c8f48155a7c2ea327c1b">

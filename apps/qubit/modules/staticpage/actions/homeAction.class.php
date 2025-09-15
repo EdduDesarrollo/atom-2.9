@@ -23,6 +23,7 @@ class StaticPageHomeAction extends StaticPageIndexAction
     {
         parent::execute($request);
 
-        // Extra features (popular searches, editor picks, virtual exhibits, etc...)
+        // Extra features (popular searhes, editor picks, virtual exhibits, etc...)
+        return $this->redirect('/fondo-historico-2');
     }
 }

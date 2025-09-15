@@ -419,6 +419,7 @@ mapping:
     _foreign_types:
       accession_events: accession_event
       alternative_identifiers: other_name
+      acquisition_type: term
       donors: donor
     dynamic: strict
     properties:
@@ -620,6 +621,7 @@ mapping:
           identifier: { type: text, copy_to: _all }
       reference_code:
         type: text
+        copy_to: _all
         fields:
           untouched:
             type: keyword

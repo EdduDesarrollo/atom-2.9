@@ -24,6 +24,7 @@
     let $node = $('#bs2-deprecation-message');
     if (0 < $node.length)
     {
+      console.log("ACA", $node.get(0));
       new Bs2DeprecationMessage($node.get(0));
     }
   });
