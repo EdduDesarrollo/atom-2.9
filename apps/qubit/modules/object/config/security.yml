@@ -1,11 +1,11 @@
 import:
-  credentials: administrator
+  credentials: [[ administrator, editor ]]
 
 importSelect:
-  credentials: administrator
+  credentials: [[ administrator, editor ]]
 
 validateCsv:
-  credentials: administrator
+  credentials: [[ administrator, editor ]]
 
 all:
   is_secure: true

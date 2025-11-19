@@ -1,6 +1,6 @@
 <?php foreach ([$adminMenu, $importMenu, $manageMenu, $addMenu] as $menu) { ?>
 
-  <?php if ($menu && ('add' == $menu->getName() || 'manage' == $menu->getName()) || $sf_user->isAdministrator()) { ?>
+  <?php if ($menu && (('add' == $menu->getName() || 'manage' == $menu->getName()) || $sf_user->isAdministrator() || ('import' == $menu->getName() && $sf_user->checkModuleActionAccess('object', 'importSelect')))) { ?>
 
     <div id="<?php echo $menu->getName(); ?>-menu" data-toggle="tooltip" data-title="<?php echo $menu->getLabel(['cultureFallback' => true]); ?>">
 
