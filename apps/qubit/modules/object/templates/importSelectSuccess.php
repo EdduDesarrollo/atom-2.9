@@ -110,6 +110,12 @@
                       <input class="list" type="hidden" value="<?php echo url_for(['module' => 'informationobject', 'action' => 'autocomplete', 'parent' => QubitInformationObject::ROOT_ID, 'filterDrafts' => true]); ?>"/>
                     </div>
                   </div>
+                  <div class="filter-row collection-limit">
+                    <div class="filter">
+                      <input name="roundtrip" type="checkbox"/>
+                      <?php echo __('Match records by ID'); ?>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

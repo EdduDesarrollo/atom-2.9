@@ -92,12 +92,13 @@ class DefaultFullTreeViewAction extends sfAction
         $result = $this->getElasticSearchResult($informationObjectId);
 
         if (null === $result) {
-            return null;
+            // return null;
+            return [];
         }
 
         $data = $result->getData();
 
-        return $data['ancestors'];
+        return $data['ancestors'] ?? [];
     }
 
     /**
@@ -471,11 +472,12 @@ class DefaultFullTreeViewAction extends sfAction
         }
 
         // If show identifier setting is "reference code", use it
+        /** En vez de usar referenceCode, usamos referenceCodeWithoutCountryAndRepo */
         if (
             'referenceCode' === $this->showIdentifier
-            && isset($record['referenceCode'])
+            && isset($record['referenceCodeWithoutCountryAndRepo'])
         ) {
-            $identifier = $record['referenceCode'];
+            $identifier = $record['referenceCodeWithoutCountryAndRepo'];
         }
 
         // If $identifier has a value, prepend it to the input text

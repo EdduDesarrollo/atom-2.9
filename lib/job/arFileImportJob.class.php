@@ -193,8 +193,11 @@ class arFileImportJob extends arBaseJob
      */
     private function setCsvImportParams(&$importer, $parameters)
     {
+        $this->info('DEBUG roundtrip - Valor recibido: ' . var_export($parameters['roundtrip'] ?? 'NO EXISTE', true));
+        $this->info('DEBUG roundtrip - Tipo: ' . gettype($parameters['roundtrip'] ?? 'NO EXISTE'));
+        $this->info('DEBUG roundtrip - empty() result: ' . (empty($parameters['roundtrip'] ?? null) ? 'true' : 'false'));
         foreach ($parameters as $key => $value) {
-            if (empty($value)) {
+            if (empty($value) && $key !== 'roundtrip') {
                 continue;
             }
 
@@ -246,6 +249,16 @@ class arFileImportJob extends arBaseJob
 
                 case 'parentId':
                     $importer->setParent($parameters['parentId']);
+
+                    break;
+
+                case 'roundtrip':
+                    $importer->roundtrip = $parameters['roundtrip'];
+
+                    break;
+
+                case 'no-confirmation':
+                    $importer->noConfirmation = $parameters['no-confirmation'];
 
                     break;
             }

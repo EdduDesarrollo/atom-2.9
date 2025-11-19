@@ -1,4 +1,4 @@
-<?php echo get_component('default', 'bs2DeprecationMessage'); ?>
+<?php // echo get_component('default', 'bs2DeprecationMessage'); ?>
 
 <?php echo get_component('default', 'updateCheck'); ?>
 

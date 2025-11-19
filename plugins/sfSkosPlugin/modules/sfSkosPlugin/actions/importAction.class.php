@@ -35,6 +35,7 @@ class sfSkosPluginImportAction extends DefaultEditAction
         if ($request->isMethod('post')) {
             $this->form->bind($request->getPostParameters(), $request->getFiles());
 
+            var_dump($this->form->getValues());
             if ($this->form->isValid()) {
                 $params = $this->context->routing->parse(Qubit::pathInfo($this->form->getValue('taxonomy')));
                 $taxonomyId = $params['_sf_route']->resource->id;
@@ -89,6 +90,12 @@ class sfSkosPluginImportAction extends DefaultEditAction
                 $this->form->setWidget('url', new sfWidgetFormInput([], ['placeholder' => 'https://']));
 
                 break;
+
+            case 'roundtrip':
+                $this->form->setWidget('roundtrip', new sfWidgetFormInputCheckbox());
+                $this->form->setValidator('roundtrip', new sfValidatorBoolean());
+
+                break;
         }
     }
 
@@ -136,6 +143,10 @@ class sfSkosPluginImportAction extends DefaultEditAction
             'parentId' => $parentId,
         ];
 
+        if ($this->form->getValue('roundtrip')) {
+            $payload['roundtrip'] = true;
+        }
+        
         // We know at this point that we have either a file or a remote resource
         if (null !== $this->form->getValue('file')) {
             // TODO: moveUploadFile only works with request data, we should rely on

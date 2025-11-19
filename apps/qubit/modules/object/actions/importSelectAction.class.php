@@ -206,6 +206,8 @@ class ObjectImportSelectAction extends DefaultEditAction
             'repositorySlug' => $this->repositorySlug,
             'collectionSlug' => $this->collectionSlug,
             'file' => $file,
+            'roundtrip' => ('on' == $request->getParameter('roundtrip')) ? true : false,
+            'no-confirmation' => true,
         ];
 
         try {

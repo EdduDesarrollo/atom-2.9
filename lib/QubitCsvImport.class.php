@@ -28,6 +28,8 @@ class QubitCsvImport
     public $doCsvTransform = false;
     public $skipUnmatched = false;
     public $skipMatched = false;
+    public $roundtrip = false;
+    public $noConfirmation = false;
     public $updateType = '';
     public $limit = '';
     protected $errors;
@@ -39,6 +41,7 @@ class QubitCsvImport
         $commandUpdate = '';
         $commandSkipMatched = '';
         $commandSkipUnmatched = '';
+        $commandRoundtrip = '';
         $commandLimit = '';
         $exitCode = 0;
 
@@ -100,6 +103,9 @@ class QubitCsvImport
         $commandUser = ('csv:import' == $taskClassName) ? sprintf('--user-id="%s"', sfContext::getInstance()->getUser()->getUserId()) : '';
 
         if ('' !== $this->updateType) {
+            $commandRoundtrip = ($this->roundtrip) ? '--roundtrip' : '';
+            $commandNoConfirmation = $this->noConfirmation ? '--no-confirmation' : '';
+
             switch ($this->updateType) {
                 case 'import-as-new':
                     $commandSkipMatched = ($this->skipMatched) ? '--skip-matched' : '';
@@ -125,13 +131,15 @@ class QubitCsvImport
         if (isset($this->parent)) {
             // Example: php symfony csv:import --default-parent-slug="$sourceName" /tmp/foobar
             $command = sprintf(
-                'php %s %s %s %s %s %s %s %s --quiet --source-name=%s --default-parent-slug=%s %s',
+                'php %s %s %s %s %s %s %s %s %s %s --quiet --source-name=%s --default-parent-slug=%s %s',
                 escapeshellarg(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'symfony'),
                 escapeshellarg($taskClassName),
                 $commandIndexFlag,
                 $commandLimit,
                 $commandUpdate,
                 $commandSkipUnmatched,
+                $commandRoundtrip,
+                $commandNoConfirmation,
                 $commandSkipMatched,
                 $commandUser,
                 escapeshellarg($csvOrigFileName),
@@ -140,7 +148,7 @@ class QubitCsvImport
             );
         } else {
             // Example: php symfony csv:import /tmp/foobar
-            $commandTemplate = 'php %s %s %s %s %s %s %s --quiet %s ';
+            $commandTemplate = 'php %s %s %s %s %s %s %s %s %s --quiet %s ';
             $commandTemplate .= $sourceNameAllowed ? sprintf('--source-name=%s ', escapeshellarg($csvOrigFileName)) : '';
             $commandTemplate .= ' %s';
 
@@ -152,6 +160,8 @@ class QubitCsvImport
                 $commandLimit,
                 $commandUpdate,
                 $commandSkipUnmatched,
+                $commandRoundtrip,
+                $commandNoConfirmation,
                 $commandSkipMatched,
                 $commandUser,
                 escapeshellarg($transformedFile ? $transformedFile : $csvFile)
