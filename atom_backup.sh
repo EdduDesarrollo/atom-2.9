@@ -73,7 +73,7 @@ compress_folder() {
     check_error "Compresión de $FOLDER_PATH"
 }
 
-compress_folder_parts "/media/cintel/datos2/atom/uploads" "$UPLOADS_NAME"
+compress_folder_parts "/usr/share/nginx/atom/uploads" "$UPLOADS_NAME"
 compress_folder "/usr/share/nginx/atom/downloads" "$DOWNLOADS_NAME"
 compress_folder "/usr/share/nginx/atom/images" "$IMAGES_NAME"
 
