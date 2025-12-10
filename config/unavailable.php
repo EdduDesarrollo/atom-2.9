@@ -17,7 +17,7 @@
         </h2>
 
         <p>
-          Por favor, inténtelo de nuevo en unos segundos...
+          Estamos mejorando el sitio web. Agradecemos su comprensión y paciencia.
         </p>
 
         <div class="tips">
