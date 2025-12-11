@@ -19,6 +19,7 @@
 # Symlinks or dirctories are possible
 /downloads
 /uploads
+/images
 
 # Sitemap
 /sitemap.*

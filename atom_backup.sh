@@ -20,11 +20,19 @@ IMAGES_NAME="images_$DATE.tar.gz"
 USER="atom"
 PASS="12345"
 DATABASE_NAME="atom"
-LOG_FILE="$FOLDER_BACKUP/backup.log"
+
+# Configuración SMB
+SMB_SERVER="//wdmycloudex4100.local/agu/Backup_atom"
+SMB_USER="admin"
+SMB_PASS="2025eddie"
+SMB_MOUNT_POINT="/tmp/smb_backup_mount"
 # -----------------------------------------------------------------------------------
 
 # Crea la carpeta atom_backups si no existe
 mkdir -p $FOLDER_BACKUP/$FOLDER_NAME
+
+# Definir el archivo de log en la carpeta del backup actual
+LOG_FILE="$FOLDER_BACKUP/$FOLDER_NAME/backup.log"
 
 
 # Utils -------------------------------------------------------------------------------
@@ -98,9 +106,103 @@ uncomment_sql_mode() {
     fi
 }
 
+# Funciones SMB ------------------------------------------------------------------------
+check_and_install_cifs_utils() {
+    log_message "Verificando si cifs-utils está instalado..."
+    
+    if command -v mount.cifs >/dev/null 2>&1; then
+        log_message "cifs-utils ya está instalado"
+        return 0
+    fi
+    
+    log_message "cifs-utils no está instalado. Instalando..."
+    apt-get update -qq >/dev/null 2>&1
+    apt-get install -y cifs-utils >/dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+        log_message "cifs-utils instalado correctamente"
+        return 0
+    else
+        log_message "ERROR: No se pudo instalar cifs-utils"
+        return 1
+    fi
+}
+
+mount_smb_share() {
+    log_message "Montando recurso compartido SMB..."
+    
+    # Crear punto de montaje si no existe
+    mkdir -p "$SMB_MOUNT_POINT"
+    
+    # Montar el recurso compartido SMB
+    mount -t cifs "$SMB_SERVER" "$SMB_MOUNT_POINT" -o username="$SMB_USER",password="$SMB_PASS",uid=$(id -u),gid=$(id -g)
+    
+    if [ $? -ne 0 ]; then
+        log_message "ERROR: No se pudo montar el recurso compartido SMB"
+        return 1
+    fi
+    
+    log_message "Recurso compartido SMB montado correctamente"
+    return 0
+}
+
+unmount_smb_share() {
+    if mountpoint -q "$SMB_MOUNT_POINT" 2>/dev/null; then
+        log_message "Desmontando recurso compartido SMB..."
+        umount "$SMB_MOUNT_POINT"
+        if [ $? -eq 0 ]; then
+            rmdir "$SMB_MOUNT_POINT" 2>/dev/null
+            log_message "Recurso compartido SMB desmontado correctamente"
+        else
+            log_message "Advertencia: No se pudo desmontar el recurso compartido SMB"
+        fi
+    fi
+}
+
+copy_backup_to_smb() {
+    log_message "Copiando backup a recurso compartido SMB..."
+    
+    if [ ! -d "$SMB_MOUNT_POINT" ]; then
+        log_message "ERROR: El punto de montaje SMB no existe"
+        return 1
+    fi
+    
+    # Copiar la carpeta completa del backup
+    cp -r "$FOLDER_BACKUP/$FOLDER_NAME" "$SMB_MOUNT_POINT/"
+    
+    if [ $? -ne 0 ]; then
+        log_message "ERROR: No se pudo copiar el backup al recurso compartido SMB"
+        return 1
+    fi
+    
+    log_message "Backup copiado correctamente al recurso compartido SMB"
+    return 0
+}
+
+cleanup_old_backups_smb() {
+    log_message "Buscando backup de hace 2 semanas en SMB para eliminar..."
+    
+    if [ ! -d "$SMB_MOUNT_POINT" ]; then
+        log_message "Advertencia: El punto de montaje SMB no existe, no se puede limpiar"
+        return 1
+    fi
+    
+    if [ -d "$SMB_MOUNT_POINT/$FOLDER_DELETE" ]; then
+        rm -rf "$SMB_MOUNT_POINT/$FOLDER_DELETE"
+        if [ $? -eq 0 ]; then
+            log_message "Carpeta $FOLDER_DELETE eliminada del recurso compartido SMB"
+        else
+            log_message "Advertencia: No se pudo eliminar $FOLDER_DELETE del recurso compartido SMB"
+        fi
+    else
+        log_message "No hay backup de hace 2 semanas en SMB para eliminar."
+    fi
+}
+
 # Función de limpieza que se ejecuta al salir (incluso por error)
 cleanup() {
     uncomment_sql_mode
+    unmount_smb_share
 }
 
 # Registrar la función de limpieza para que se ejecute al salir
@@ -149,4 +251,19 @@ else
     log_message "No hay backup de hace 2 semanas para eliminar."
 fi
 
-log_message "SUCCESS: Backup realizado con éxito"
+log_message "SUCCESS: Backup local realizado con éxito"
+
+# Copiar backup a recurso compartido SMB
+log_message "Iniciando copia del backup al recurso compartido SMB..."
+if check_and_install_cifs_utils && mount_smb_share; then
+    copy_backup_to_smb
+    if [ $? -eq 0 ]; then
+        cleanup_old_backups_smb
+    fi
+    unmount_smb_share
+    log_message "SUCCESS: Backup copiado al recurso compartido SMB con éxito"
+else
+    log_message "ERROR: No se pudo copiar el backup al recurso compartido SMB"
+fi
+
+log_message "SUCCESS: Proceso de backup completado"
