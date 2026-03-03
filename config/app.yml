@@ -23,7 +23,7 @@ all:
   # Google Analitycs:
   # Set a GA property API key to track page view hits.
   # E.g.: UA-1234567-89
-  google_analytics_api_key:
+  google_analytics_api_key: G-8XKKPM6ZYK
   # Set a GA custom dimension index numver (from the same property)
   # to track the repository name as a dimension in page view hits
   # of IOs, actors and repos index pages.

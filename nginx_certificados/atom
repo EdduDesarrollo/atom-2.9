@@ -1,0 +1,103 @@
+upstream atom {
+  server unix:/run/php-fpm.atom.sock;
+}
+
+server {
+
+  listen 80;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+
+  root /usr/share/nginx/atom;
+
+  # http://wiki.nginx.org/HttpCoreModule#server_name
+  # _ means catch any, but it's better if you replace this with your server
+  # name, e.g. archives.foobar.com
+  
+  server_name 164.73.14.31;
+  ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+  ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+  ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_prefer_server_ciphers on;
+  ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+  ssl_ecdh_curve secp384r1;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_tickets off;
+  #ssl_stapling on;
+  ssl_stapling_verify on;
+  resolver 8.8.8.8 8.8.4.4 valid=300s;
+  resolver_timeout 5s;
+
+  #add_header Strict-Transport-Security "max-age=6307200; includeSubdomains; preload";
+  add_header "Access-Control-Allow-Origin" *;
+  add_header Access-Control-Allow-Methods "GET";
+  add_header Access-Control-Allos-Origin "10.73.80.2";
+  add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+  add_header X-Frame-Options DENY;
+  add_header X-Content-Type-Options nosniff;
+
+  disable_symlinks off;
+
+  client_max_body_size 300M;
+
+  # http://wiki.nginx.org/HttpCoreModule#try_files
+  location / {
+    try_files $uri /index.php?$args;
+  }
+
+  location /prosites {
+    auth_basic		"En la selva";
+    auth_basic_user_file /usr/share/nginx/atom/prosites/.htpasswd;
+  }
+  location /extra {
+    auth_basic		"En la selva";
+    auth_basic_user_file /usr/share/nginx/atom/prosites/.htpasswd;
+  }
+
+  location ~ /\. {
+    deny all;
+    return 404;
+  }
+
+  location ~* (\.yml|\.ini|\.tmpl)$ {
+    deny all;
+    return 404;
+  }
+
+  location ~* /(?:uploads|files)/.*\.php$ {
+    deny all;
+    return 404;
+  }
+
+  location ~* /uploads/r/(.*)/conf/ {
+
+  }
+
+  location ~* ^/uploads/r/(.*)$ {
+    include /etc/nginx/fastcgi_params;
+    set $index /index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$index;
+    fastcgi_param SCRIPT_NAME $index;
+    fastcgi_pass atom;
+  }
+
+  location ~ ^/private/(.*)$ {
+    internal;
+    alias /usr/share/nginx/atom/$1;
+  }
+
+  location ~ ^/(index|qubit_dev)\.php(/|$) {
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    fastcgi_pass atom;
+  }
+
+  location ~* \.php$ {
+    deny all;
+    return 404;
+  }
+
+}
