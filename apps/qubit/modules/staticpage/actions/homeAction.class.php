@@ -21,9 +21,30 @@ class StaticPageHomeAction extends StaticPageIndexAction
 {
     public function execute($request)
     {
-        parent::execute($request);
+        // If the redirect-home plugin is enabled and a target fonds has been
+        // configured, redirect there instead of showing the static home page.
+        $configuration = $this->getContext()->getConfiguration();
 
-        // Extra features (popular searhes, editor picks, virtual exhibits, etc...)
-        return $this->redirect('/fondo-historico-2');
+        if ($configuration->isPluginEnabled('arRedirectHomePlugin')) {
+            $setting = QubitSetting::getByName('redirect_home_information_object_id');
+
+            if (null !== $setting && null !== $setting->id) {
+                $value = $setting->getValue(['sourceCulture' => true]);
+
+                if ('' !== (string) $value) {
+                    $targetId = (int) $value;
+
+                    if (QubitInformationObject::ROOT_ID !== $targetId) {
+                        $fonds = QubitInformationObject::getById($targetId);
+
+                        if (null !== $fonds && null !== $fonds->id) {
+                            $this->redirect([$fonds, 'module' => 'informationobject']);
+                        }
+                    }
+                }
+            }
+        }
+
+        parent::execute($request);
     }
 }
