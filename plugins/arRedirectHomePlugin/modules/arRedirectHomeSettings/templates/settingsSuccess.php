@@ -26,12 +26,24 @@
 
       <fieldset class="collapsible">
 
-        <legend><?php echo __('Redirect home target'); ?></legend>
+        <legend>
+          <a href="#">
+            <span class="element-invisible">
+              <?php echo __('Hide'); ?>
+            </span>
+            <?php echo __('Redirect Home Settings'); ?>
+          </a>
+          <span class="summary"></span>
+        </legend>
 
-        <?php echo $form->redirect_home_information_object_id
-            ->label(__('Fonds used as home redirect target'))
-            ->help(__('Select which top-level fonds the home page should redirect to. Leave blank to keep the default home.'))
-            ->renderRow(); ?>
+        <div class="fieldset-wrapper">
+
+          <?php echo $form->redirect_home_information_object_id
+              ->label(__('Fonds used as home redirect target'))
+              ->help(__('Select which top-level fonds the home page should redirect to. Leave blank to keep the default home.'))
+              ->renderRow(); ?>
+
+        </div>
 
       </fieldset>
 
