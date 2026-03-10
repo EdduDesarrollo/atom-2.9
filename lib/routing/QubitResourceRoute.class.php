@@ -26,6 +26,28 @@ class QubitResourceRoute extends QubitRoute
         $criteria->addJoin(QubitSlug::OBJECT_ID, QubitObject::ID);
 
         $this->resource = QubitObject::get($criteria)->__get(0);
+
+        // Si no se encontró recurso, intentar resolver usando slugs antiguos
+        if (!isset($this->resource)
+            && sfContext::getInstance()->getConfiguration()->isPluginEnabled('arSaveOldSlugsPlugin')
+            && class_exists('QubitOldSlug')
+        ) {
+            $old = QubitOldSlug::findBySlug($params['slug']);
+
+            if (null !== $old) {
+                $object = QubitObject::getById($old->objectId);
+
+                if (null !== $object && isset($object->slug)) {
+                    // Generar URL con el slug actual y redirigir de forma permanente
+                    $url = sfContext::getInstance()->getRouting()->generate(
+                        null,
+                        [$object, 'module' => $context['module'] ?? null, 'action' => $context['action'] ?? null]
+                    );
+
+                    sfContext::getInstance()->getController()->redirect($url, 0, 301);
+                }
+            }
+        }
         if (false == @$params['throw404'] && !isset($this->resource)) {
             throw new sfError404Exception();
         }
