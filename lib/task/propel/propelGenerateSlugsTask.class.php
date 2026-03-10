@@ -102,22 +102,38 @@ class propelGenerateSlugsTask extends arBaseTask
                 array_push($reservedSlugs, $privacySlug);
             }
 
+            $oldSlugPluginEnabled = $this->configuration->isPluginEnabled('arSaveOldSlugsPlugin')
+                && class_exists('QubitOldSlug');
+
             foreach ($classesData as $class => $data) {
                 $table = constant($class.'::TABLE_NAME');
                 $this->logSection('propel', "Delete {$table} slugs...");
 
-                $sql = "DELETE FROM slug WHERE object_id IN (SELECT id FROM {$table})";
+                // Build WHERE clause once so it can be reused for SELECT and DELETE
+                $where = 'object_id IN (SELECT id FROM '.$table.')';
 
                 if (defined("{$class}::ROOT_ID")) {
-                    $sql .= ' AND object_id != '.$class::ROOT_ID;
+                    $where .= ' AND object_id != '.$class::ROOT_ID;
                 }
 
                 if ('QubitStaticPage' == $class) {
                     $reservedSlugsString = "'".implode("','", $reservedSlugs)."'";
-                    $sql .= " AND slug NOT IN ({$reservedSlugsString})";
+                    $where .= " AND slug NOT IN ({$reservedSlugsString})";
                 }
 
-                $conn->query($sql);
+                // If the old slugs plugin is enabled, record slugs about to be deleted
+                if ($oldSlugPluginEnabled) {
+                    $selectSql = 'SELECT slug, object_id FROM slug WHERE '.$where;
+
+                    foreach ($conn->query($selectSql, PDO::FETCH_NUM) as $row) {
+                        list($slugText, $objectId) = $row;
+                        QubitOldSlug::record($slugText, $objectId);
+                    }
+                }
+
+                // Now perform the deletion as before
+                $deleteSql = 'DELETE FROM slug WHERE '.$where;
+                $conn->query($deleteSql);
             }
         }
 
