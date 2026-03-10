@@ -214,6 +214,18 @@ class propelGenerateSlugsTask extends arBaseTask
             }
         }
 
+        // If old slug plugin is enabled, clean up historical slugs that match current slugs
+        if ($oldSlugPluginEnabled) {
+            $cleanupSql = '
+                DELETE os
+                FROM old_slug os
+                INNER JOIN slug s
+                    ON os.object_id = s.object_id
+                   AND os.slug = s.slug
+            ';
+            $conn->query($cleanupSql);
+        }
+
         $this->logSection(
             'propel',
             'Note: you will need to rebuild your search index for slug changes to show up in search results.'
