@@ -1,0 +1,8 @@
+# Intentionally left empty.
+#
+# The redirect-home behavior is implemented by hooking into the existing
+# homepage action (`StaticPageHomeAction`). When the plugin is enabled and a
+# target fonds is configured, that action redirects to the fonds using the
+# stored information object ID and AtoM's normal routing.
+
+
