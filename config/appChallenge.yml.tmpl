@@ -1,0 +1,73 @@
+#
+# AtoM Javascript Challenge configuration template
+# Basado en la documentación oficial:
+# https://www.accesstomemory.org/en/docs/2.9/admin-manual/security/js-challenge/#security-js-challenge
+#
+# Copiar este archivo a config/appChallenge.yml y luego ajustar los valores.
+#
+
+# Toggle the JS challenge feature on/off.
+activated: false
+
+# If true, run headless-browser tests.
+test_headless: true
+
+# Cookie names.
+cookiename_visited:  atom_visited
+cookiename_headless: atom_headless
+cookiename_js:       atom_js
+
+# Dialog-text settings (can be customized, e.g. to Spanish).
+dialog_title:       "Verifying Your Browser"
+dialog_message:     "Hang tight — we're just making sure you're a real person so our community stays safe."
+redirect_prefix:    "Redirecting in"
+redirect_suffix:    "second(s)..."
+noscript_message:   "JavaScript is required for this step. Please enable JavaScript in your browser and try again."
+
+# Paths which always bypass the challenge.
+endpoint_exceptions:
+  - '/api'
+  - '/qtSwordPlugin'
+
+# Secret salt used to sign cookie values.
+# IMPORTANT: MUST be set to a unique random value
+# before setting activated: true in appChallenge.yml.
+salt: 'REPLACE_WITH_SECRET'
+
+# Challenge delay (in seconds) the user will have to wait to pass the challenge.
+delay_seconds: 5
+
+# How many days the “visited” cookie should live.
+cookie_days: 90
+
+# CIDR blocks which always bypass the challenge.
+cidr_exceptions:
+  - '192.168.1.0/24'
+  - '10.0.0.0/8'
+
+# Exceptions combining ASN and User Agent (regex).
+asn_user_agent_exceptions:
+  examplebot:
+    asn: 12345
+    user_agent: ".*ExampleBot.*"
+
+# Exceptions combining network (CIDR) and User Agent (regex).
+network_user_agent_exceptions:
+  monitoring_tool:
+    user_agent: ".*prometheus.*"
+    src_net: "159.89.xxx.xx/32"
+
+# Exceptions by GeoIP country.
+country_exceptions:
+  canada:
+    country: CA
+
+# Exceptions by ASN only.
+asn_exceptions:
+  - 15169
+  - 12345
+
+# GeoIP database paths used for country/ASN-based exceptions.
+geoip_asn_db_path:  '%SF_ROOT_DIR%/geoip/GeoLite2-ASN.mmdb'
+geoip_city_db_path: '%SF_ROOT_DIR%/geoip/GeoLite2-City.mmdb'
+
