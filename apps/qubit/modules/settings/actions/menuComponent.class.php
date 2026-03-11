@@ -106,6 +106,14 @@ class SettingsMenuComponent extends sfComponent
                 'action' => 'siteInformation',
             ],
             [
+                'label' => $i18n->__('Redirect home'),
+                'module' => 'arRedirectHomeSettings',
+                'action' => 'settings',
+                'hide' => !$this->context->getConfiguration()->isPluginEnabled(
+                    'arRedirectHomePlugin'
+                ),
+            ],
+            [
                 'label' => $i18n->__('Storage service'),
                 'module' => 'arStorageServiceSettings',
                 'action' => 'settings',

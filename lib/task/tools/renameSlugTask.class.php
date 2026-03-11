@@ -117,6 +117,14 @@ EOF;
         } elseif (!$slug) {
             $this->failedSlugs[] = "{$oldSlug} not found.";
         } else {
+            // Si el plugin de guardado de slugs antiguos está habilitado,
+            // registrar el slug viejo en la tabla old_slug antes de cambiarlo.
+            if ($this->configuration->isPluginEnabled('arSaveOldSlugsPlugin')
+                && class_exists('QubitOldSlug')
+            ) {
+                QubitOldSlug::record($oldSlug, $slug->objectId);
+            }
+
             $slug->slug = $newSlug;
             $slug->save();
             $this->logSection('rename-slug', "Slug {$oldSlug} updated to {$newSlug} successfully.");

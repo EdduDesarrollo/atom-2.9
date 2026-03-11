@@ -78,6 +78,23 @@ class QubitMetadataRoute extends QubitRoute
             $criteria->addJoin(QubitSlug::OBJECT_ID, QubitObject::ID);
 
             if (null === $this->resource = QubitObject::get($criteria)->__get(0)) {
+                // Intentar resolver usando slugs antiguos solo si el plugin está activo
+                if (sfContext::getInstance()->getConfiguration()->isPluginEnabled('arSaveOldSlugsPlugin')
+                    && class_exists('QubitOldSlug')
+                ) {
+                    $old = QubitOldSlug::findBySlug($parameters['slug']);
+
+                    if (null !== $old) {
+                        $object = QubitObject::getById($old->objectId);
+
+                        if (null !== $object && isset($object->slug)) {
+                            $ctx = sfContext::getInstance();
+                            $url = $ctx->getRouting()->generate(null, [$object]);
+                            $ctx->getController()->redirect($url, 0, 301);
+                        }
+                    }
+                }
+
                 return false;
             }
 
