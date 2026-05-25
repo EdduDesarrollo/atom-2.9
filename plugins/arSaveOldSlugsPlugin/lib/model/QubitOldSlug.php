@@ -3,7 +3,7 @@
 /*
  * Helper ligero para trabajar con la tabla old_slug sin depender de que
  * exista un modelo Propel generado. La tabla se crea mediante la migración
- * arMigration0194 (ver docs/090326_guardado_viejos_slugs.md).
+ * arMigration9000 (ver docs/PLUGINS_DESARROLLADOS.md).
  */
 
 class QubitOldSlug

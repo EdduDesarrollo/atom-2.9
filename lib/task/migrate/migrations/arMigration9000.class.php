@@ -18,19 +18,27 @@
  */
 
 /*
- * Add table old_slug to persist historical slugs for redirecting legacy URLs.
+ * Migración AGU (custom): tabla old_slug para arSaveOldSlugsPlugin.
+ *
+ * El número 9000 reserva un rango alto para migraciones propias de AGU y evita
+ * colisionar con arMigration0194, arMigration0195, etc. que añade Artefactual
+ * en futuras versiones de AtoM. El archivo DEBE llamarse arMigration9000.class.php
+ * y la clase arMigration9000 (convención de tools:upgrade-sql).
  *
  * @package    AccesstoMemory
  * @subpackage migration
  */
-class arMigration9000AguOldSlugs
+class arMigration9000
 {
     public const VERSION = 9000;
     public const MIN_MILESTONE = 2;
 
     public function up($configuration)
     {
-        // Create table old_slug if it does not exist yet
+        if ($this->isAlreadyApplied()) {
+            return true;
+        }
+
         $sql = <<<'SQL'
 CREATE TABLE IF NOT EXISTS `old_slug` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -47,5 +55,15 @@ SQL;
 
         return true;
     }
-}
 
+    /**
+     * Idempotente: upgrade-sql puede volver a invocar esta migración porque el
+     * contador de versión de BD sigue en ~194 y VERSION es 9000.
+     */
+    private function isAlreadyApplied()
+    {
+        $sql = "SHOW TABLES LIKE 'old_slug'";
+
+        return false !== QubitPdo::fetchColumn($sql);
+    }
+}
