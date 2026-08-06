@@ -23,17 +23,17 @@ DATABASE_NAME="atom"
 
 # Configuración SMB
 SMB_HOST="164.73.14.59"
-SMB_SERVER="//${SMB_HOST}/12TB/agu/Backup_atom"
-SMB_USER="lapa"
-SMB_PASS="lapa2018"
+SMB_SERVER="//${SMB_HOST}/12teras/agu/Backup_atom"
+SMB_USER="eddu"
+SMB_PASS="2025eddie"
 SMB_MOUNT_POINT="/tmp/smb_backup_mount"
 SMB_MOUNT_ATTEMPTS=5
 SMB_MOUNT_RETRY_SLEEP=60
 FAIL_MARKER="/var/log/atom_backup.FAILED"
 
 # Mail (mismos destinatarios que backup_raid; comas SIN espacios)
-# DESTINATARIOS="eddudesarrollo@gmail.com,mariano+agu@reperger.com,nacho.seimanas@gmail.com"
-DESTINATARIOS="mariano+agu@reperger.com"
+DESTINATARIOS="eddudesarrollo@gmail.com,mariano+agu@reperger.com,nacho.seimanas@gmail.com"
+# DESTINATARIOS="mariano+agu@reperger.com"
 MUTT_BIN="/usr/bin/mutt"
 MAIL_ATTACH_MAX_BYTES=$((5 * 1024 * 1024))
 MAIL_FROM='AtoM <eddudesarrollo@gmail.com>'
